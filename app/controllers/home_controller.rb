@@ -6,23 +6,16 @@ require 'mysql'
 class HomeController < ApplicationController
   def index
   
-  con = Mysql.new '127.0.0.1', 'root', 'root', 'mydb'
-  rs = con.query('SELECT * FROM Votes')
-  rows = rs.num_rows
-  scores = []
-  rows.times do
-    scores.append(rs.fetch_row)
-  end
-  rs = con.query('SELECT descriptor FROM Data WHERE borough = "MANHATTAN"')
-  rows = rs.num_rows
-  data = []
-  rows.times do
-    data.append(rs.fetch_row)
-  end
-  @scores = []
-  for i in 0..scores.size do
-    @scores.append([scores[i], data[i]])
-  end
+    con = Mysql.new '127.0.0.1', 'root', 'root', 'mydb'
+    rs = con.query('SELECT * FROM Votes')
+    rows = rs.num_rows
+    @scores = []
+    rows.times do
+      tmp = rs.fetch_row
+      new_rs = con.query('SELECT descriptor FROM Data WHERE unique_key=' + tmp[0].to_s)
+      a = new_rs.fetch_row
+      @scores.append([tmp[0],a[0]])
+    end
 
 #    file = File.read('public/test.json')
 #    ret = JSON.parse(file)
@@ -75,7 +68,7 @@ class HomeController < ApplicationController
 
   def mostRequested
     con = Mysql.new '127.0.0.1', 'root', 'root', 'mydb'
-    rs = con.query('SELECT count(*),complaint_type FROM Data WHERE (incident_zip = 10018 OR incident_zip = 10001) GROUP BY complaint_type ORDER BY count(*) DESC')
+    rs = con.query('SELECT count(*),complaint_type FROM Data WHERE borough="MANHATTAN" GROUP BY complaint_type ORDER BY count(*) DESC')
     rows = rs.num_rows
     @info = []
     rows.times do

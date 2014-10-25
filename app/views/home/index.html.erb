@@ -1,5 +1,5 @@
 <h1>Home#index</h1>
 <input onclick="filterSingleValue();" type=button value="Filter" /><br>
 <% for score in @scores do %>
-Score <%= score[0] %>, <span id='vote_<%= score[0] %>'><%= score[1] %></span> <img src='assets/green-dot.png' height='10' onclick=increment(<%=score[0]%>) /><br>
+ID <%= score[0] %>, <span id='vote_<%= score[0] %>'> Descriptor: <%= score[1] %></span> <img src='assets/green-dot.png' height='10' onclick=increment(<%=score[0]%>) /><br>
 <% end %>
