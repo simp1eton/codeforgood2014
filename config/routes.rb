@@ -1,4 +1,14 @@
 Codeforgood2014::Application.routes.draw do
+  get "home/index"
+  post "/update", :to => 'home#update'
+
+  resources :requests
+  resources :articles
+
+  root :to => "home#index"
+  #'/update' :to => 'home#update'
+#  '/update' :to => 'home#update'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

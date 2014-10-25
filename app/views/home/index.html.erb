@@ -1,0 +1,8 @@
+<h1>Home#index</h1>
+<%= form_tag('/update', method: 'post', id: 'yay') do %>
+<input name='vote_id' id='hi' value='ho'>Hey</input>
+<button name='button' type='submit'>Hi</button>
+<% end %>
+<% for score in @scores do %>
+Score <%= score[0] %>, <span id='vote_<%= score[0] %>'><%= score[1] %></span> <button onclick=increment(<%=score[0]%>)>Vote for Me!</button><br>
+<% end %>
