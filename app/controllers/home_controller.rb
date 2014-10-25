@@ -9,11 +9,20 @@ class HomeController < ApplicationController
   con = Mysql.new '127.0.0.1', 'root', 'root', 'mydb'
   rs = con.query('SELECT * FROM Votes')
   rows = rs.num_rows
-  @scores = []
+  scores = []
   rows.times do
-    @scores.append(rs.fetch_row)
+    scores.append(rs.fetch_row)
   end
-
+  rs = con.query('SELECT descriptor FROM Data WHERE borough = "MANHATTAN"')
+  rows = rs.num_rows
+  data = []
+  rows.times do
+    data.append(rs.fetch_row)
+  end
+  @scores = []
+  for i in 0..scores.size do
+    @scores.append([scores[i], data[i]])
+  end
 
 #    file = File.read('public/test.json')
 #    ret = JSON.parse(file)
@@ -37,26 +46,6 @@ class HomeController < ApplicationController
       #req.stored_data = tmp
       #req.save
   #  end
-
-    #ret = JSON.load(open("https://data.ct.gov/resource/hma6-9xbg.json?category=Fruit&item=Peaches"))
-    #puts ret.size
-    #for tmp in ret
-    #  puts tmp["created_date"]
-    #end
-    #SODA::Client.new({:domain="explore.data.gov", :app_token => 'TestApp12345'})
-    #client = SODA::Client.new({:domain => "http://data.cityofnewyork.us/resource/", :app_token => "ndARAhp1btjZWLyHOU2Cc8fyz"})
-    #response = client.get("erm2-nwe9.json")
-    #puts response
-  #  render :text => Request.all
-    #uri = URI.parse(sodaUrl)
-    #http = Net::HTTP.new(uri.host, uri.port)
-    #http.use_ssl = true
-    #http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-    #request = Net::HTTP::Get.new(uri.request_uri)
-
-    #response = http.request(request)
-    #puts response.body
   end
   def update
     #puts params
@@ -65,4 +54,38 @@ class HomeController < ApplicationController
     rs = con.query('SELECT * FROM Votes WHERE id=' + params['vote_id'].to_s)
     render :text => params['vote_id'].to_s + ' ' + rs.fetch_row[1].to_s#'1 1024'  
   end
-end
+
+  def cities
+=begin
+    @keys = ['unique_key','created_date','closed_date','agency','agency_name','complaint_type','descriptor','incident_zip','incident_address','street_name','city','status','due_date','borough','latitude','longitude']
+
+    con = Mysql.new '127.0.0.1', 'root', 'root', 'mydb'
+    rs = con.query('SELECT count(*), complaint_type FROM Data WHERE borough = "MANHATTAN" GROUP BY complaint_type ORDER BY count(*) DESC')
+    rows = rs.num_rows
+    @info = []
+    rows.times do
+      tmp = rs.fetch_row
+      #@info = tmp.size.to_s
+      #break
+      @info.append(tmp)
+    end
+    #render :text => @info.size
+=end
+  end
+
+  def mostRequested
+    con = Mysql.new '127.0.0.1', 'root', 'root', 'mydb'
+    rs = con.query('SELECT count(*),complaint_type FROM Data WHERE (incident_zip = 10018 OR incident_zip = 10001) GROUP BY complaint_type ORDER BY count(*) DESC')
+    rows = rs.num_rows
+    @info = []
+    rows.times do
+      tmp = rs.fetch_row
+#@info = tmp.size.to_s
+#break
+      @info.append(tmp)
+    end
+    render :text => @info
+
+  end
+  end
+

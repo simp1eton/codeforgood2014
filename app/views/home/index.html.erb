@@ -1,8 +1,5 @@
 <h1>Home#index</h1>
-<%= form_tag('/update', method: 'post', id: 'yay') do %>
-<input name='vote_id' id='hi' value='ho'>Hey</input>
-<button name='button' type='submit'>Hi</button>
-<% end %>
+<input onclick="filterSingleValue();" type=button value="Filter" /><br>
 <% for score in @scores do %>
-Score <%= score[0] %>, <span id='vote_<%= score[0] %>'><%= score[1] %></span> <button onclick=increment(<%=score[0]%>)>Vote for Me!</button><br>
+Score <%= score[0] %>, <span id='vote_<%= score[0] %>'><%= score[1] %></span> <img src='assets/green-dot.png' height='10' onclick=increment(<%=score[0]%>) /><br>
 <% end %>
